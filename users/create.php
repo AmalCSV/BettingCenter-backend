@@ -44,7 +44,18 @@ if(!property_exists($data, 'password') || $data->firstName =='password' || $data
     $password = $data->password;
     $hashedPassword = md5($password);
 
-    if(isset($firstName) && isset($lastName) && isset($userName) && isset($password)){
+    $queryExist = " SELECT * FROM user WHERE userName = :userName ";
+    $stmtExist = $conn->prepare($queryExist);
+
+    $stmtExist->execute(['userName' => $userName]);
+
+        if( $stmtExist->rowCount() >0 ){
+
+            $data = ['message' => 'Username already Exists', 'status' => "error"];
+            echo json_encode($data);
+        }
+
+    elseif(isset($firstName) && isset($lastName) && isset($userName) && isset($password)){
     $query = "INSERT INTO user (firstName, lastName, userName, password, isActive) VALUES (:firstName,:lastName,:userName,:password,1)";
     
     $stmt = $conn->prepare($query);
