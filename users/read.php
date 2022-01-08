@@ -7,31 +7,46 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
+//create query
+$queryRead = " SELECT id,firstName, lastName, userName FROM user WHERE isActive = 1 ORDER BY id DESC ";
 
-if(isset($_GET['id'])){
+//prepare the query statement
+$stmt = $conn->prepare($queryRead);
 
-    $id = $_GET['id'];
+//execute the query
+$stmt->execute();
 
-    //create query
-    $query = "SELECT firstName, lastName, userName FROM user WHERE id= :id AND isActive = 1 ";
+$num = $stmt->rowCount();
 
-    //prepare the query
-    $stmt = $conn->prepare($query);
-
-    //execute the query
-    $stmt->execute(['id'=>$id]);
-
-    if($stmt->rowCount() > 0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        echo json_encode($row);
-
-    } else{
-
-        echo json_encode(array("message"=>"No Active User Found"));
+//check if more than zero users found
+if($num > 0){
+    //user array
+    $users_arr = array();
+    $users_arr["data"] = array(); 
+    
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+         extract($row);
+    
+         $user_record = array(
+             "id" => $id,
+             "firstName" =>$firstName,
+             "lastName" =>$lastName,
+             "userName" =>$userName,
+         );
+    
+         //push to data
+         array_push($users_arr["data"], $user_record);
+         $users_arr["Success"] = true; 
     }
+    
+    //Turn to JSON and output (show users data in JSON format)
+    echo json_encode($users_arr);
 
-    $stmt->closeCursor();
+    }else{
 
-}
-
-
+    //tell the user no Users found
+    $users_arr["Success"] = false; 
+    echo json_encode($users_arr);
+    
+    }
+    ?>
