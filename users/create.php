@@ -62,17 +62,15 @@ if(!property_exists($data, 'password') || $data->firstName =='password' || $data
 
     $stmt->execute(['firstName' => $firstName,'lastName' => $lastName,'userName' => $userName,'password' => $hashedPassword]);
 
-    $last_id = $stmt.insert_id;
+    $insertedId = $conn->lastInsertId();
     
-    echo $last_id;
-    //$last_id = 1;
     $querySelect = "SELECT id,firstName,lastName,userName FROM user WHERE  id = :id ";
 
 //prepare the query statement
 $stmtSelect = $conn->prepare($querySelect);
 
 //execute the query
-$stmtSelect->execute(['id' => $last_id ]);
+$stmtSelect->execute(['id' => $insertedId]);
 
 $user =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
