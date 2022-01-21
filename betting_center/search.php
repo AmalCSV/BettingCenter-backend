@@ -22,16 +22,32 @@ if(isset($_GET['id'])){
     $stmt->execute(['id'=>$id]);
 
     if($stmt->rowCount() > 0) {
+
+        $BettingCen_arr = array();
+        $BettingCen_arr["data"] = array(); 
+
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        echo json_encode($row);
+        extract($row);
+        
+        $BettingCen_record = array(
+            "id" => $id,
+            "name" =>$name,
+            "address" =>$address,
+            "contactPerson" =>$contactPerson,
+            "phone" =>$phone
+        );
+
+        array_push($BettingCen_arr["data"], $BettingCen_record);
+        $BettingCen_arr["Success"] = true; 
+
+        echo json_encode($BettingCen_arr);
 
     } else{
 
-        echo json_encode(array("message"=>"No Active Betting Center Found"));
+        $BettingCen_arr["Success"] = false; 
+        echo json_encode($BettingCen_arr);
     }
 
     $stmt->closeCursor();
 
 }
-
-

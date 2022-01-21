@@ -58,6 +58,7 @@ else if(!property_exists($data, 'phone')|| $data->phone =='null' || $data->phone
 //prepare the query statement
 $stmtSelect = $conn->prepare($querySelect);
 
+
 //execute the query
 $stmtSelect->execute(['id' => $insertedid]);
 
@@ -66,7 +67,9 @@ $bettingcen =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
     echo json_encode($bettingcen);
 
-}else{
+}
+else{
+    
     echo json_encode(array("message"=>"Betting Center was not created"));
 }
 
