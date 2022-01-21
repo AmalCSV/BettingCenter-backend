@@ -31,16 +31,12 @@ else if(!property_exists($data, 'CreatedBy')|| $data->CreatedBy =='null' || $dat
             echo json_encode($data);
             exit();
 }
-else if(!property_exists($data, 'createdDate')|| $data->createdDate =='null' || $data->createdDate == '') {
-    $data = ['message' => 'Invalid createdDate', 'status' => "error"];
-            echo json_encode($data);
-            exit();
-}
+
   
     $bettingDate = $data->bettingDate;
     $closingTime = $data->closingTime;
     $CreatedBy = $data->CreatedBy;
-    $createdDate = $data->createdDate;
+    $createdDate = date('Y-m-d H:i:s');
 
 
     if(isset($bettingDate) && isset($closingTime) && isset($CreatedBy) && isset($createdDate)){

@@ -50,11 +50,6 @@ else if(!property_exists($data, 'createdBy')|| $data->createdBy =='null' || $dat
             echo json_encode($data);
             exit();
 }
-else if(!property_exists($data, 'createdDate')|| $data->createdDate =='null' || $data->createdDate == '') {
-    $data = ['message' => 'Invalid createdDate', 'status' => "error"];
-            echo json_encode($data);
-            exit();
-}
 else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $data->isDeleted == '') {
     $data = ['message' => 'Invalid isDeleted', 'status' => "error"];
             echo json_encode($data);
@@ -68,7 +63,7 @@ else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $dat
     $description = $data->description;
     $extendedJson = $data->extendedJson;
     $createdBy = $data->createdBy;
-    $createdDate = $data->createdDate;
+    $createdDate = date('Y-m-d H:i:s');
     $isDeleted = $data->isDeleted;
   
 
