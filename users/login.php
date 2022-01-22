@@ -1,30 +1,36 @@
 <?php
-
-//headers
-header("Acess-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
+include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
+
+$data = json_decode(file_get_contents("php://input"));
 
 $userName = '';
 $password = '';
 
-$userName = isset($_GET["userName"]) ? $_GET["userName"] : die();
+if(!property_exists($data, 'userName') || $data->userName =='null' || $data->userName == '') {
+    $output = ['message' => 'Invalid userName', 'success'=> false];
+    echo json_encode($output);
+    exit();
+}
 
-$password = md5(isset($_GET["password"]) ? $_GET["password"] : die());
+if(!property_exists($data, 'password') || $data->password =='null' || $data->password == '') {
+    $output = ['message' => 'Invalid password', 'success'=> false];
+            echo json_encode($output);
+            exit();
+}
+$userName = $data->userName;
+$password = md5($data->password);
 
-$loginQuery = "SELECT id, userName FROM user WHERE userName = :userName AND password = :password";
+$loginQuery = "SELECT id, userName, firstName,lastName FROM user WHERE userName = :userName AND password = :password";
 
 $stmt = $conn->prepare($loginQuery);
-
 $stmt->execute(['userName' => $userName,'password' => $password]);
 
 if($stmt->rowCount() > 0){
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo json_encode(array("message"=>"Login Successful"));
-    echo json_encode($row);
+    echo json_encode(array('success'=> true, 'data'=>$row));
 }else{
-    echo json_encode(array("message"=>"Login Failed"));
+    echo json_encode(array('success'=> false,'message' =>"Login Failed"));
 
 }

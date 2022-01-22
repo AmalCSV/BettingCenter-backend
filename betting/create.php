@@ -1,9 +1,5 @@
 <?php
-
-//headers
-header("Acess-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
+include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
@@ -38,8 +34,6 @@ if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($
 
     $stmtBetting ->execute(['customer' => $customer,'bettingDate' => $bettingDate,'bettingCenterId' => $bettingCenterId,'bettingAmount' => $bettingAmount,'winningAmount' => $winningAmount,'createdDate' => $createdDate,'createdBy' => $createdBy]);
 
-    echo json_encode(array("message"=>"Data Passed to tables"));
-
     $insertedId = $conn->lastInsertId();
 
     $queryBettingAmount = "INSERT INTO bettingamount (id, bettingRaceHorseId, bettingAmountType, amount) VALUES (:id,:bettingRaceHorseId,:bettingAmountType,:amount)";
@@ -56,6 +50,8 @@ if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($
     $stmtBettingHorse = $conn->prepare($queryBettingHorse);
 
     $stmtBettingHorse ->execute(['id' => $insertedId,'bettingId' => $bettingId,'raceCode' => $raceCode,'horseCode' => $horseCode]);
+    
+    echo json_encode(array("message"=>"Data Passed to tables"));
 
 }else{ 
     echo json_encode(array("message"=>"Data Not Passed"));
