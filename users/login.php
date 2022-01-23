@@ -29,7 +29,41 @@ $stmt->execute(['userName' => $userName,'password' => $password]);
 
 if($stmt->rowCount() > 0){
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo json_encode(array('success'=> true, 'data'=>$row));
+    $id = $row['id'];
+    $firstname = $row['firstName'];
+    $lastname = $row['lastName'];
+    $username = $row['userName'];
+
+    $secret_key = "BETTING_CORE";
+    $issuer_claim = "ADR_SERVER"; // this can be the servername
+    $audience_claim = "MILAN";
+    $issuedat_claim = time(); // issued at
+    $notbefore_claim = $issuedat_claim + 10; //not before in seconds
+    $expire_claim = $issuedat_claim + 60000; // expire time in seconds
+    $token = array(
+        "iss" => $issuer_claim,
+        "aud" => $audience_claim,
+        "iat" => $issuedat_claim,
+        "nbf" => $notbefore_claim,
+        "exp" => $expire_claim,
+        "data" => array(
+            "id" => $id,
+            "firstname" => $firstname,
+            "lastname" => $lastname,
+            "username" => $username
+    ));
+
+    //$jwt = JWT::encode($token, $secret_key);
+    $data = array(
+            "message" => "Successful login.",
+            "jwt" =>  '', //$jwt,
+            "userName" => $username,
+            "expireAt" => $expire_claim,
+            "firstName" => $firstname,
+            "lastName" => $lastname,
+    );
+
+    echo json_encode(array('success'=> true, 'data'=>$data ));
 }else{
     echo json_encode(array('success'=> false,'message' =>"Login Failed"));
 
