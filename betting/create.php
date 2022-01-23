@@ -10,49 +10,52 @@ $customer = $data->customer;
 $bettingDate = $data->bettingDate;
 $bettingCenterId = $data->bettingCenterId;
 $bettingAmount = $data->bettingAmount;
-$winningAmount = $data->winningAmount;
-$createdDate = date('Y-m-d H:i:s');
 $createdBy = $data->createdBy;
 
-//bettingamount table
-$bettingRaceHorseId = $data->bettingRaceHorseId;
-$bettingAmountType = $data->bettingAmountType;
-$amount = $data->amount;
-
-//bettinghorse table
-$bettingId = $data->bettingId;
-$raceCode = $data->raceCode;
-$horseCode = $data->horseCode;
+$createdDate = date('Y-m-d H:i:s');
 
 
+/*
+bets : [{ bettingHorse: [{ raceCode:'w1', horseCode: 'wewe' ..], "amounts": [{"amountTypeId":2, 
+            "amount": 100},
+            {"amountTypeId":1, 
+            "amount": 20}]}, 
+ { raceCode:'w1', horseCode: 'wewe' ..], "amounts": [{"amountTypeId":2, 
+            "amount": 100},
+            {"amountTypeId":1, 
+            "amount": 20}],]
+ */
 
-if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($bettingAmount) && isset($winningAmount) && isset($createdDate) && isset($createdBy)){
+$bets = $data->bets;
 
-    $queryBetting = "INSERT INTO betting (customer, bettingDate, bettingCenterId, bettingAmount, winningAmount,createdDate,createdBy) VALUES (:customer,:bettingDate,:bettingCenterId,:bettingAmount,:winningAmount,:createdDate,:createdBy)";
-    
+
+if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($bettingAmount) && isset($createdDate) && isset($createdBy) && isset($bets)){
+
+    $queryBetting = "INSERT INTO betting (customer, bettingDate, bettingCenterId, bettingAmount,createdDate,createdBy,winningAmount) VALUES (:customer,:bettingDate,:bettingCenterId,:bettingAmount,:createdDate,:createdBy,0)";
     $stmtBetting = $conn->prepare($queryBetting);
+    $stmtBetting ->execute(['customer' => $customer,'bettingDate' => $bettingDate,'bettingCenterId' => $bettingCenterId,'bettingAmount' => $bettingAmount,'createdDate' => $createdDate,'createdBy' => $createdBy]);
+    $insertedBettingId = $conn->lastInsertId();
 
-    $stmtBetting ->execute(['customer' => $customer,'bettingDate' => $bettingDate,'bettingCenterId' => $bettingCenterId,'bettingAmount' => $bettingAmount,'winningAmount' => $winningAmount,'createdDate' => $createdDate,'createdBy' => $createdBy]);
+    foreach ($bets as $bet) {
+        $queryBettingCollection = "INSERT INTO horseCollection (bettingId) VALUES (:bettingId)";
+        $stmtBettingCollection = $conn->prepare($queryBettingCollection);
+        $stmtBettingCollection ->execute(['bettingId' => $insertedBettingId]);
+        $insertedBettingCollectionId = $conn->lastInsertId();
 
-    $insertedId = $conn->lastInsertId();
+        foreach ($bet->amounts as $amount) {
+            $queryBettingAmount = "INSERT INTO bettingamount (HorseCollectionId, bettingAmountType, amount) VALUES (:horseCollectionId,:bettingAmountType,:amount)";
+            $stmtBettingAmount = $conn->prepare($queryBettingAmount);
+            $stmtBettingAmount -> execute(['horseCollectionId' => $insertedBettingCollectionId,'bettingAmountType' => $amount->amountTypeId,'amount' => $amount->amount]);
+        }
 
-    $queryBettingAmount = "INSERT INTO bettingamount (id, bettingRaceHorseId, bettingAmountType, amount) VALUES (:id,:bettingRaceHorseId,:bettingAmountType,:amount)";
-
-    $stmtBettingAmount = $conn->prepare($queryBettingAmount);
-
-    $stmtBettingAmount ->execute(['id' => $insertedId,'bettingRaceHorseId' => $bettingRaceHorseId,'bettingAmountType' => $bettingAmountType,'amount' => $amount]);
-
-    //betting horse
-    $insertedId = $conn->lastInsertId();
-
-    $queryBettingHorse = "INSERT INTO bettinghorse (id, bettingId, raceCode, horseCode) VALUES (:id,:bettingId,:raceCode,:horseCode)";
-
-    $stmtBettingHorse = $conn->prepare($queryBettingHorse);
-
-    $stmtBettingHorse ->execute(['id' => $insertedId,'bettingId' => $bettingId,'raceCode' => $raceCode,'horseCode' => $horseCode]);
-    
-    echo json_encode(array("message"=>"Data Passed to tables"));
-
+        foreach ($bet->bettingHorse as $bettingHorse){
+            $queryBettingHorse = "INSERT INTO bettinghorse (horseCollectionId, raceCode, horseCode,bettingId) VALUES (:horseCollectionId,:raceCode,:horseCode,:bettingId)";
+            $stmtBettingHorse = $conn->prepare($queryBettingHorse);
+            $stmtBettingHorse ->execute(['horseCollectionId' => $insertedBettingCollectionId,'raceCode' => $bettingHorse->raceCode,'horseCode' => $bettingHorse->horseCode, 'bettingId' => $insertedBettingId ]);
+        }
+    }
+      
+    echo json_encode(array("success" => true, "data" => array()));
 }else{ 
-    echo json_encode(array("message"=>"Data Not Passed"));
+    echo json_encode(array("success" => false, "message" => "Data Not Passed"));
 } 

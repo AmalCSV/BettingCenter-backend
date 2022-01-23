@@ -59,7 +59,8 @@ if($stmt->rowCount() > 0){
             "jwt" =>  '', //$jwt,
             "userName" => $username,
             "expireAt" => $expire_claim,
-            "firstName"
+            "firstName" => $firstname,
+            "lastName" => $lastname,
     );
 
     echo json_encode(array('success'=> true, 'data'=>$data ));
