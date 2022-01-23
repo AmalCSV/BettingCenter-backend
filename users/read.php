@@ -18,35 +18,23 @@ $stmt->execute();
 
 $num = $stmt->rowCount();
 
-//check if more than zero users found
-if($num > 0){
     //user array
     $users_arr = array();
     $users_arr["data"] = array(); 
     
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
          extract($row);
-    
          $user_record = array(
              "id" => $id,
              "firstName" =>$firstName,
              "lastName" =>$lastName,
              "userName" =>$userName,
          );
-    
          //push to data
          array_push($users_arr["data"], $user_record);
-         $users_arr["Success"] = true; 
+
     }
-    
+    $users_arr["success"] = true; 
     //Turn to JSON and output (show users data in JSON format)
     echo json_encode($users_arr);
-
-    }else{
-
-    //tell the user no Users found
-    $users_arr["Success"] = false; 
-    echo json_encode($users_arr);
-    
-    }
     ?>

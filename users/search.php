@@ -36,14 +36,14 @@ if(isset($_GET['id'])){
             "userName" =>$userName
         );
 
-        array_push($users_arr["data"], $user_record);
-        $users_arr["Success"] = true; 
+        $users_arr["data"] = $user_record;
+        $users_arr["success"] = true; 
 
         echo json_encode($users_arr);
 
     } else{
 
-        $users_arr["Success"] = false; 
+        $users_arr["success"] = false; 
         echo json_encode($users_arr);
     }
 
