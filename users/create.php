@@ -40,7 +40,6 @@ if($field != null) {
     $stmtExist->execute(['userName' => $userName]);
 
         if( $stmtExist->rowCount() >0 ){
-
             $data = ['message' => 'Username already Exists', 'success'=> false];
             echo json_encode($data);
         }
