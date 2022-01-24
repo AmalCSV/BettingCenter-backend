@@ -17,7 +17,6 @@ $createdBy	 = '';
 $createdDate = '';
 $isDeleted = '';
 
-
 $data = json_decode(file_get_contents("php://input"));
 
 if(!property_exists($data, 'name')|| $data->name =='null' || $data->name == '') {
@@ -55,8 +54,6 @@ else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $dat
             echo json_encode($data);
             exit();
 }
-
-  
     $name = $data->name;
     $identifier = $data->identifier;
     $date = $data->date;
@@ -65,8 +62,6 @@ else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $dat
     $createdBy = $data->createdBy;
     $createdDate = date('Y-m-d H:i:s');
     $isDeleted = $data->isDeleted;
-  
-
 
     if(isset($name) && isset($identifier) && isset($date) && isset($description) && isset($extendedJson) && isset($createdBy) && isset($createdDate) && isset($isDeleted)){
     $query = "INSERT INTO race (name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted) VALUES (:name,:identifier,:date,:description,:extendedJson,:createdBy,:createdDate,:isDeleted)";
@@ -87,9 +82,8 @@ $stmtSelect->execute(['id' => $insertedid]);
 
 $race =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
-
     echo json_encode($race);
-
-}else{
-    echo json_encode(array("message"=>"Betting Center was not created"));
+}
+else{
+    echo json_encode(array("message"=>"Race was not created"));
 }

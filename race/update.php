@@ -39,10 +39,7 @@ $data = json_decode(file_get_contents("php://input"));
 
     echo json_encode(array("message" => "Race was updated."));
     }
-
     else{
         echo json_encode(array("message" => "Race was not updated.")); 
     }
-
-
 ?>

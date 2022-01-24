@@ -13,7 +13,6 @@ $closingTime = '';
 $CreatedBy = '';
 $createdDate = '';
 
-
 $data = json_decode(file_get_contents("php://input"));
 
 if(!property_exists($data, 'bettingDate')|| $data->bettingDate =='null' || $data->bettingDate == '') {
@@ -31,13 +30,10 @@ else if(!property_exists($data, 'CreatedBy')|| $data->CreatedBy =='null' || $dat
             echo json_encode($data);
             exit();
 }
-
-  
     $bettingDate = $data->bettingDate;
     $closingTime = $data->closingTime;
     $CreatedBy = $data->CreatedBy;
     $createdDate = date('Y-m-d H:i:s');
-
 
     if(isset($bettingDate) && isset($closingTime) && isset($CreatedBy) && isset($createdDate)){
     $query = "INSERT INTO bettingclosing (bettingDate,closingTime,CreatedBy,createdDate) VALUES (:bettingDate,:closingTime,:CreatedBy,:createdDate)";
@@ -47,7 +43,7 @@ else if(!property_exists($data, 'CreatedBy')|| $data->CreatedBy =='null' || $dat
     $stmt->execute(['bettingDate' => $bettingDate,'closingTime' => $closingTime, 'CreatedBy' => $CreatedBy,'createdDate' => $createdDate]);
 
     $insertedid = $conn->lastInsertId();
-    //$last_id = 1;
+
     $querySelect = "SELECT id,bettingDate,closingTime,CreatedBy,createdDate FROM bettingclosing WHERE  id = :id ";
 
 //prepare the query statement
@@ -58,9 +54,7 @@ $stmtSelect->execute(['id' => $insertedid]);
 
 $bettingcen =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
-
     echo json_encode($bettingcen);
-
 }else{
     echo json_encode(array("message"=>"Betting Center was not created"));
 }

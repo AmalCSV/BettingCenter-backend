@@ -7,7 +7,6 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
-
 if(isset($_GET['id'])){
 
     $id = $_GET['id'];
@@ -49,5 +48,4 @@ if(isset($_GET['id'])){
     }
 
     $stmt->closeCursor();
-
 }
