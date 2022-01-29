@@ -1,5 +1,4 @@
 <?php
-
 include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
