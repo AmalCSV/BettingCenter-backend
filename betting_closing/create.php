@@ -37,13 +37,10 @@ else if(!property_exists($data, 'CreatedBy')|| $data->CreatedBy =='null' || $dat
 
     if(isset($bettingDate) && isset($closingTime) && isset($CreatedBy) && isset($createdDate)){
     $query = "INSERT INTO bettingclosing (bettingDate,closingTime,CreatedBy,createdDate) VALUES (:bettingDate,:closingTime,:CreatedBy,:createdDate)";
-    
     $stmt = $conn->prepare($query);
-
     $stmt->execute(['bettingDate' => $bettingDate,'closingTime' => $closingTime, 'CreatedBy' => $CreatedBy,'createdDate' => $createdDate]);
 
     $insertedid = $conn->lastInsertId();
-
     $querySelect = "SELECT id,bettingDate,closingTime,CreatedBy,createdDate FROM bettingclosing WHERE  id = :id ";
 
 //prepare the query statement

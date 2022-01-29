@@ -40,7 +40,6 @@ if(isset($_GET['id'])){
         $BettingCen_arr["Success"] = true; 
 
         echo json_encode($BettingCen_arr);
-
     } else{
 
         $BettingCen_arr["Success"] = false; 

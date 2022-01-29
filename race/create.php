@@ -64,14 +64,11 @@ else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $dat
     $isDeleted = $data->isDeleted;
 
     if(isset($name) && isset($identifier) && isset($date) && isset($description) && isset($extendedJson) && isset($createdBy) && isset($createdDate) && isset($isDeleted)){
-    $query = "INSERT INTO race (name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted) VALUES (:name,:identifier,:date,:description,:extendedJson,:createdBy,:createdDate,:isDeleted)";
-    
+    $query = "INSERT INTO race (name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted) VALUES (:name,:identifier,:date,:description,:extendedJson,:createdBy,:createdDate,:isDeleted)";    
     $stmt = $conn->prepare($query);
-
     $stmt->execute(['name' => $name,'identifier' => $identifier,'date' => $date,'description' => $description,'extendedJson' => $extendedJson,'createdBy' => $createdBy,'createdDate' => $createdDate,'isDeleted' => $isDeleted]);
 
     $insertedid = $conn->lastInsertId();
-    //$last_id = 1;
     $querySelect = "SELECT id,name,identifier,date,description,extendedJson,createdBy,createdDate,isDeleted FROM race WHERE  id = :id ";
 
 //prepare the query statement

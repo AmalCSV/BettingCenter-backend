@@ -22,7 +22,6 @@ $stmt = $conn->prepare($query);
 
 //execute the query
 $stmt->execute();
-
 $num = $stmt->rowCount();
 
 //check if more than zero found

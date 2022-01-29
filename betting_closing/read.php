@@ -38,9 +38,7 @@ if($num > 0){
              "closingTime" => $closingTime,
              "CreatedBy" =>$CreatedBy,
              "createdDate" => $createdDate,
-
          );
-   
          //push to data
          array_push($bettingcen_arr["data"], $bettingcen_record);
          $bettingcen_arr["Success"] = true; 
