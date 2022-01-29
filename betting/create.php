@@ -30,10 +30,10 @@ $bets = $data->bets;
 
 
 if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($bettingAmount) && isset($createdDate) && isset($createdBy) && isset($bets)){
-
-    $queryBetting = "INSERT INTO betting (customer, bettingDate, bettingCenterId, bettingAmount,createdDate,createdBy,winningAmount) VALUES (:customer,:bettingDate,:bettingCenterId,:bettingAmount,:createdDate,:createdBy,0)";
+    $calculatedBettingAmount = 0;//battingCalcuation($bets);
+    $queryBetting = "INSERT INTO betting (customer, bettingDate, bettingCenterId, bettingAmount,createdDate,createdBy,winningAmount, calculateBettingAmount) VALUES (:customer,:bettingDate,:bettingCenterId,:bettingAmount,:createdDate,:createdBy,0,:calculateBettingAmount)";
     $stmtBetting = $conn->prepare($queryBetting);
-    $stmtBetting ->execute(['customer' => $customer,'bettingDate' => $bettingDate,'bettingCenterId' => $bettingCenterId,'bettingAmount' => $bettingAmount,'createdDate' => $createdDate,'createdBy' => $createdBy]);
+    $stmtBetting ->execute(['customer' => $customer,'bettingDate' => $bettingDate,'bettingCenterId' => $bettingCenterId,'bettingAmount' => $bettingAmount,'createdDate' => $createdDate,'createdBy' => $createdBy, 'calculateBettingAmount' => $calculatedBettingAmount ]);
     $insertedBettingId = $conn->lastInsertId();
 
     foreach ($bets as $bet) {
