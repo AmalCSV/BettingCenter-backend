@@ -7,18 +7,18 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
-//create query
-$queryRead = " SELECT id,firstName, lastName, userName FROM user WHERE isActive = 1 ORDER BY id DESC ";
+    if(isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $queryRead = " SELECT id,firstName, lastName, userName FROM user WHERE isActive = 1 AND id =:id ORDER BY id DESC ";
+        $stmt = $conn->prepare($queryRead);
+        $stmt->execute(['id' => $id]); 
+    } else {
+        $queryRead = " SELECT id,firstName, lastName, userName FROM user WHERE isActive = 1 ORDER BY id DESC ";
+        $stmt = $conn->prepare($queryRead);
+        $stmt->execute();
+    }
 
-//prepare the query statement
-$stmt = $conn->prepare($queryRead);
-
-//execute the query
-$stmt->execute();
-
-$num = $stmt->rowCount();
-
-    //user array
+    $num = $stmt->rowCount();
     $users_arr = array();
     $users_arr["data"] = array(); 
     
@@ -30,11 +30,11 @@ $num = $stmt->rowCount();
              "lastName" =>$lastName,
              "userName" =>$userName,
          );
-         //push to data
          array_push($users_arr["data"], $user_record);
-
     }
+    if(count($users_arr["data"]) == 1){
+        $users_arr["data"] = $users_arr["data"][0];
+    } 
     $users_arr["success"] = true; 
-    //Turn to JSON and output (show users data in JSON format)
-    echo json_encode($users_arr);
+    echo json_encode($users_arr, FALSE);
     ?>
