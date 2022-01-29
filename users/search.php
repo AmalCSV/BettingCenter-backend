@@ -1,9 +1,5 @@
 <?php
-//headers
-header("Acess-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
-//include database
+include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 

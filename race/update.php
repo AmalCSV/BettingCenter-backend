@@ -1,9 +1,5 @@
 <?php
-
-header("Acess-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
-
+include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
@@ -17,11 +13,10 @@ $data = json_decode(file_get_contents("php://input"));
     $extendedJson = $data->extendedJson;
     $createdBy = $data->createdBy;
     $createdDate = $data->createdDate;
-    $isDeleted = $data->isDeleted;
 
-    if(isset($id) && isset($name) && isset($identifier) && isset($date) && isset($description) && isset($extendedJson) && isset($createdBy) && isset($createdDate) && isset($isDeleted) ){
+    if(isset($id) && isset($name) && isset($identifier) && isset($date) && isset($description) && isset($extendedJson) && isset($createdBy) && isset($createdDate)){
 
-    $updateQuery = "UPDATE race SET name = :name, identifier = :identifier, date = :date, description = :description, extendedJson = :extendedJson, createdBy = :createdBy, createdDate = :createdDate, isDeleted = :isDeleted WHERE id = :id";
+    $updateQuery = "UPDATE race SET name = :name, identifier = :identifier, date = :date, description = :description, extendedJson = :extendedJson, createdBy = :createdBy, createdDate = :createdDate WHERE id = :id";
 
     $stmt = $conn->prepare($updateQuery);
 
@@ -33,15 +28,14 @@ $data = json_decode(file_get_contents("php://input"));
     $extendedJson = htmlspecialchars(strip_tags($extendedJson));
     $createdBy = htmlspecialchars(strip_tags($createdBy));
     $createdDate = htmlspecialchars(strip_tags($createdDate));
-    $isDeleted = htmlspecialchars(strip_tags($isDeleted));
 
-    $stmt->execute(['id' => $id,'name' => $name,'identifier' => $identifier, 'date' => $date,'description' => $description, 'extendedJson' => $extendedJson,'createdBy' => $createdBy,'createdDate' => $createdDate,'isDeleted' => $isDeleted]);
+    $stmt->execute(['id' => $id,'name' => $name,'identifier' => $identifier, 'date' => $date,'description' => $description, 'extendedJson' => $extendedJson,'createdBy' => $createdBy,'createdDate' => $createdDate]);
 
-    echo json_encode(array("message" => "Race was updated."));
+    echo json_encode(array("success"=> true, "message" => "Race was updated."));
     }
 
     else{
-        echo json_encode(array("message" => "Race was not updated.")); 
+        echo json_encode(array("success"=> false, "message" => "Race was not updated.")); 
     }
 
 
