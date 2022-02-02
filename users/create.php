@@ -1,12 +1,9 @@
 <?php
-
-//headers
-header("Acess-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
+include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
+try{
 $firstName = '';
 $lastName = '';
 $userName = '';
@@ -14,30 +11,22 @@ $password = '';
 
 $data = json_decode(file_get_contents("php://input"));
 
+$field = null;
 if(!property_exists($data, 'firstName') || $data->firstName =='null' || $data->firstName == '') {
-    $data = ['message' => 'Invalid fistName', 'status' => "error"];
-            echo json_encode($data);
-            exit();
+    $field = ['message' => 'Invalid fistName', 'success'=> false];
+} else if(!property_exists($data, 'lastName') || $data->lastName =='null' || $data->lastName == '') {
+    $field = ['message' => 'Invalid lastName', 'success'=> false];
+} else if(!property_exists($data, 'userName') || $data->userName =='null' || $data->userName == '') {
+    $field = ['message' => 'Invalid userName', 'success'=> false];
+} else if(!property_exists($data, 'password') || $data->firstName =='password' || $data->password == '') {
+    $field = ['message' => 'Invalid password', 'success'=> false];
 }
 
-if(!property_exists($data, 'lastName') || $data->lastName =='null' || $data->lastName == '') {
-    $data = ['message' => 'Invalid lastName', 'status' => "error"];
-            echo json_encode($data);
-            exit();
+if($field != null) {
+    $output = ['message' => 'Invalid field : '.$field, 'success'=> false];
+    echo json_encode($output);
+    exit();
 }
-
-if(!property_exists($data, 'userName') || $data->userName =='null' || $data->userName == '') {
-    $data = ['message' => 'Invalid userName', 'status' => "error"];
-            echo json_encode($data);
-            exit();
-}
-
-if(!property_exists($data, 'password') || $data->firstName =='password' || $data->password == '') {
-    $data = ['message' => 'Invalid password', 'status' => "error"];
-            echo json_encode($data);
-            exit();
-}
-  
     $firstName = $data->firstName;
     $lastName = $data->lastName;
     $userName = $data->userName;
@@ -46,36 +35,30 @@ if(!property_exists($data, 'password') || $data->firstName =='password' || $data
 
     $queryExist = " SELECT * FROM user WHERE userName = :userName ";
     $stmtExist = $conn->prepare($queryExist);
-
     $stmtExist->execute(['userName' => $userName]);
 
         if( $stmtExist->rowCount() >0 ){
-
-            $data = ['message' => 'Username already Exists', 'status' => "error"];
+            $data = ['message' => 'Username already Exists', 'success'=> false];
             echo json_encode($data);
         }
 
     elseif(isset($firstName) && isset($lastName) && isset($userName) && isset($password)){
     $query = "INSERT INTO user (firstName, lastName, userName, password, isActive) VALUES (:firstName,:lastName,:userName,:password,1)";
-    
     $stmt = $conn->prepare($query);
-
     $stmt->execute(['firstName' => $firstName,'lastName' => $lastName,'userName' => $userName,'password' => $hashedPassword]);
 
     $insertedId = $conn->lastInsertId();
     
     $querySelect = "SELECT id,firstName,lastName,userName FROM user WHERE  id = :id ";
-
-//prepare the query statement
-$stmtSelect = $conn->prepare($querySelect);
-
-//execute the query
-$stmtSelect->execute(['id' => $insertedId]);
+    $stmtSelect = $conn->prepare($querySelect);
+    $stmtSelect->execute(['id' => $insertedId]);
 
 $user =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
-
-    echo json_encode($user);
-
+    echo json_encode(array('success'=> true, 'data'=>$user));
 }else{
-    echo json_encode(array("message"=>"User was not created"));
+    echo json_encode(array('success'=> false,'message' =>"something went wrong"));
 }
+}catch (exception $e){
+    echo json_encode(array("success" => false, "message" => $e));
+}
+?>

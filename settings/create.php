@@ -3,7 +3,8 @@ include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
-$ide = '';
+try{
+$id = '';
 $companyName = '';
 $address = '';
 $tax = '';
@@ -34,7 +35,6 @@ if(isset($companyName) && isset($address) && isset($tax)){
     if($id == null) {
         $queryInsert = "INSERT INTO settings (companyName,address,tax,extendedJson) VALUES (:companyName,:address,:tax,:extendedJson)";
         $stmtInsert = $conn->prepare($queryInsert);
-     
         $stmtInsert->execute(['companyName' =>$companyName, 'address' =>$address, 'tax' =>$tax, 'extendedJson' =>$extendedJson]);
         echo json_encode(array("success" => true, "message" => "Settings was created"));
     } else {
@@ -55,5 +55,9 @@ if(isset($companyName) && isset($address) && isset($tax)){
     }
 } else {
     echo json_encode(array( "success" => false, "message" => "No record for requried fields"));
+}
+
+}catch(exception $e){
+    echo json_encode(array("success" => false, "message" => $e));
 }
 ?>
