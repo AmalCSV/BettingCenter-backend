@@ -6,7 +6,7 @@ include_once "../config/database.php";
 $data = json_decode(file_get_contents("php://input"));
 
 //racewinning table
-
+try{
 $raceId = $data->raceId;
 $raceCode = $data->raceCode;
 $raceDateTime = date('Y-m-d H:i:s');
@@ -19,7 +19,7 @@ $createdDate = date('Y-m-d H:i:s');
     "raceCode" : 3432,
     "raceDateTime" : "2022-01-15 00:35:07",
     "createdBy" : "31",
-    "winningHorse" : [{"horseCode" : "DEC", "winningPlace" : 1, "amount":100 }, {"horseCode" : "FINE","winningPlace" : 2, "amount":20 }],
+    "winningHorse" : [{"horseCode" : "DEC", "winningPlace" : 1, "amount":100 }, {"horseCode" : "FINE","winningPlace" : 2, "amountFront" : 20, "amountBack" : 10 }]
 }
 */
 $winningHorse = $data->winningHorse;
@@ -32,13 +32,16 @@ if(isset($raceId) && isset($raceCode) && isset($raceDateTime) && isset($createdB
     $insertedRaceWinningId = $conn->lastInsertId();
 
     foreach($winningHorse as $winningHorses){
-        $queryRaceWinningHorse = "INSERT INTO racewinninghorse (raceWinningId, raceId, horseCode, winningPlace,amount) VALUES (:raceWinningId,:raceId,:horseCode,:winningPlace,:amount) ";
+        $queryRaceWinningHorse = "INSERT INTO racewinninghorse (raceWinningId, raceId, horseCode, winningPlace,amountFront,amountBack) VALUES (:raceWinningId,:raceId,:horseCode,:winningPlace,:amountFront,:amountBack) ";
         $stmtRaceWinningHorse = $conn->prepare($queryRaceWinningHorse);
-        $stmtRaceWinningHorse->execute(['raceWinningId'=>$insertedRaceWinningId, 'raceId'=>$raceId, 'horseCode'=>$winningHorses->horseCode, 'winningPlace'=>$winningHorses->winningPlace, 'amount'=>$winningHorses->amount ]);
+        $stmtRaceWinningHorse->execute(['raceWinningId'=>$insertedRaceWinningId, 'raceId'=>$raceId, 'horseCode'=>$winningHorses->horseCode, 'winningPlace'=>$winningHorses->winningPlace, 'amountFront'=>$winningHorses->amountFront, 'amountBack'=>$winningHorses->amountBack]);
     }
 
     echo json_encode(array("success" => true, "data" => array()));
 
 }else{ 
     echo json_encode(array("success" => false, "message" => "Data Not Passed"));
+}
+}catch(exception $e){
+    echo json_encode(array("success"=>false,"message"=>$e));
 } 

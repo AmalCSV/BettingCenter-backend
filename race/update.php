@@ -5,6 +5,7 @@ include_once "../config/database.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
+try{
     $id = $data->id;    
     $name = $data->name;
     $identifier = $data->identifier;
@@ -37,6 +38,7 @@ $data = json_decode(file_get_contents("php://input"));
     else{
         echo json_encode(array("success"=> false, "message" => "Race was not updated.")); 
     }
-
-
+}catch(exception $e){
+    echo json_encode(array("success"=>false,"message"=>$e));
+}
 ?>

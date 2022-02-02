@@ -3,18 +3,13 @@ include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
-
 if(isset($_GET['id'])){
-
     $id = $_GET['id'];
 
-    //create query
     $query = "SELECT firstName, lastName, userName FROM user WHERE id= :id AND isActive = 1 ";
 
-    //prepare the query
     $stmt = $conn->prepare($query);
 
-    //execute the query
     $stmt->execute(['id'=>$id]);
 
     if($stmt->rowCount() > 0) {
@@ -44,7 +39,6 @@ if(isset($_GET['id'])){
     }
 
     $stmt->closeCursor();
-
 }
 
-
+?>

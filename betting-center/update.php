@@ -5,13 +5,13 @@ include_once "../config/database.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
+try{
     $id = $data->id;    
     $name = $data->name;
     $address = $data->address;
     $contactPerson = $data->contactPerson;
     $phone = $data->phone;
     
-
     if(isset($id) && isset($name) && isset($address) && isset($contactPerson) && isset($phone)){
 
     $updateQuery = "UPDATE bettingcenter SET name = :name, address = :address,contactPerson = :contactPerson, phone = :phone WHERE id = :id";
@@ -26,11 +26,13 @@ $data = json_decode(file_get_contents("php://input"));
 
     $stmt->execute(['id' => $id,'name' => $name,'address' => $address,'contactPerson' => $contactPerson,'phone' => $phone]);
 
-    echo json_encode(array("message" => "Betting Center was updated."));
+    echo json_encode(array("success"=>true,"message" => "Betting Center was updated."));
     }
-
     else{
-        echo json_encode(array("message" => "Betting Center was not updated."));
+        echo json_encode(array("success"=>false,"message" => "Betting Center was not updated."));
     }
-
+}catch(exception $e){
+        echo json_encode(array("success"=>false,"message"=>$e));
+    }
+?>
 

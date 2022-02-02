@@ -37,29 +37,17 @@ if($num > 0){
              "createdDate" => $createdDate,
 
          );
-   
-
          //push to data
          array_push($bettingcen_arr["data"], $bettingcen_record);
          $bettingcen_arr["Success"] = true; 
     }
     
-    //set response code - 200 OK
-    //http_response_code(200);
-    //Turn to JSON and output 
     echo json_encode($bettingcen_arr);
     
     }else{
 
     $bettingcen_arr["Success"] = false; 
-    echo json_encode($bettingcen_arr);  
-    //set response code - 404 Not found
-    //http_response_code(404);
-
-    //echo json_encode(array("message"=>"No Betting Center Found")
-    //);
-    
+    echo json_encode($bettingcen_arr);   
     }
 
-
-    ?>
+?>

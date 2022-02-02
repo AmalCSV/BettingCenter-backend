@@ -5,6 +5,7 @@ include_once "../config/database.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
+try{
 //betting table
 $customer = $data->customer;
 $bettingDate = $data->bettingDate;
@@ -59,3 +60,6 @@ if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($
 }else{ 
     echo json_encode(array("success" => false, "message" => "Data Not Passed"));
 } 
+}catch(exception $e){
+    echo json_encode(array("success"=>false,"message"=>$e));
+}

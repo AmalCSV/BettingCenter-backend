@@ -5,6 +5,7 @@ include_once "../config/database.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
+try{
     $id = $data->id;
     $firstName = $data->firstName;
     $lastName = $data->lastName;
@@ -31,10 +32,15 @@ $data = json_decode(file_get_contents("php://input"));
 
     $stmt->execute(['id' =>$id,'firstName' => $firstName,'lastName' => $lastName,'userName' => $userName,'password' => $password,'isActive' => $isActive]);
 
-    echo json_encode(array("message" => "User was updated."));
+    echo json_encode(array("success" => true, "message" => "User was updated."));
     }
 
     else{
-        echo json_encode(array("message" => "User was not updated."));
+        echo json_encode(array("sucess" => false, "message" => "User was not updated."));
     }
 
+    } catch (exception $e){
+        echo json_encode (array("success" => false, "message" => $e));
+    }
+
+?>

@@ -3,6 +3,7 @@ include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
+try{
 $firstName = '';
 $lastName = '';
 $userName = '';
@@ -26,7 +27,6 @@ if($field != null) {
     echo json_encode($output);
     exit();
 }
-  
     $firstName = $data->firstName;
     $lastName = $data->lastName;
     $userName = $data->userName;
@@ -35,7 +35,6 @@ if($field != null) {
 
     $queryExist = " SELECT * FROM user WHERE userName = :userName ";
     $stmtExist = $conn->prepare($queryExist);
-
     $stmtExist->execute(['userName' => $userName]);
 
         if( $stmtExist->rowCount() >0 ){
@@ -45,25 +44,21 @@ if($field != null) {
 
     elseif(isset($firstName) && isset($lastName) && isset($userName) && isset($password)){
     $query = "INSERT INTO user (firstName, lastName, userName, password, isActive) VALUES (:firstName,:lastName,:userName,:password,1)";
-    
     $stmt = $conn->prepare($query);
-
     $stmt->execute(['firstName' => $firstName,'lastName' => $lastName,'userName' => $userName,'password' => $hashedPassword]);
 
     $insertedId = $conn->lastInsertId();
     
     $querySelect = "SELECT id,firstName,lastName,userName FROM user WHERE  id = :id ";
-
-//prepare the query statement
-$stmtSelect = $conn->prepare($querySelect);
-
-//execute the query
-$stmtSelect->execute(['id' => $insertedId]);
+    $stmtSelect = $conn->prepare($querySelect);
+    $stmtSelect->execute(['id' => $insertedId]);
 
 $user =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
-
     echo json_encode(array('success'=> true, 'data'=>$user));
 }else{
     echo json_encode(array('success'=> false,'message' =>"something went wrong"));
-
 }
+}catch (exception $e){
+    echo json_encode(array("success" => false, "message" => $e));
+}
+?>

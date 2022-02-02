@@ -59,12 +59,5 @@ if($num > 0){
 
     $race_arr["Success"] = false; 
     echo json_encode($race_arr);    
-    //set response code - 404 Not found
-    //http_response_code(404);
-  
-    //echo json_encode(array("message"=>"No Race Found")
-  
-    
-    }
-
-    ?>
+}
+?>

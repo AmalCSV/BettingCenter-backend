@@ -13,7 +13,6 @@ $createdBy	 = '';
 $createdDate = '';
 $isDeleted = '';
 
-
 $data = json_decode(file_get_contents("php://input"));
 
 if(!property_exists($data, 'name')|| $data->name =='null' || $data->name == '') {
@@ -51,8 +50,7 @@ else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $dat
             echo json_encode($data);
             exit();
 }
-
-  
+try{
     $name = $data->name;
     $identifier = $data->identifier;
     $date = $data->date;
@@ -62,30 +60,22 @@ else if(!property_exists($data, 'isDeleted')|| $data->isDeleted =='null' || $dat
     $createdDate = date('Y-m-d H:i:s');
     $isDeleted = $data->isDeleted;
   
-
-
     if(isset($name) && isset($identifier) && isset($date) && isset($description) && isset($extendedJson) && isset($createdBy) && isset($createdDate) && isset($isDeleted)){
     $query = "INSERT INTO race (name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted) VALUES (:name,:identifier,:date,:description,:extendedJson,:createdBy,:createdDate,:isDeleted)";
-    
     $stmt = $conn->prepare($query);
-
     $stmt->execute(['name' => $name,'identifier' => $identifier,'date' => $date,'description' => $description,'extendedJson' => $extendedJson,'createdBy' => $createdBy,'createdDate' => $createdDate,'isDeleted' => $isDeleted]);
 
     $insertedid = $conn->lastInsertId();
-    //$last_id = 1;
     $querySelect = "SELECT id,name,identifier,date,description,extendedJson,createdBy,createdDate,isDeleted FROM race WHERE  id = :id ";
-
-//prepare the query statement
-$stmtSelect = $conn->prepare($querySelect);
-
-//execute the query
-$stmtSelect->execute(['id' => $insertedid]);
+    $stmtSelect = $conn->prepare($querySelect);
+    $stmtSelect->execute(['id' => $insertedid]);
 
 $race =  $stmtSelect->fetch(PDO::FETCH_ASSOC);
-
-
-    echo json_encode($race);
+    echo json_encode(array("success" => true ,"data"=>$race));
 
 }else{
-    echo json_encode(array("message"=>"Betting Center was not created"));
+    echo json_encode(array("success" => false, "message"=>"Betting Center was not created"));
+}
+}catch(exception $e){
+    echo json_encode (array("success"=>false,"message"=>$e));
 }
