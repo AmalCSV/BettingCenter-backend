@@ -1,17 +1,17 @@
 <?php
+//headers
 include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
-if(isset($_GET['id'])){
-    $id = $_GET['id'];
+if(isset($_GET['searchText'])){
 
-    $query = "SELECT firstName, lastName, userName FROM user WHERE id= :id AND isActive = 1 ";
-
+    $searchText = $_GET['searchText'];
+   
+    $query = "SELECT id, firstName, lastName, userName FROM user WHERE (firstName LIKE '%". $searchText. "%' OR lastName LIKE '%". $searchText. "%' ) AND isActive = 1";
     $stmt = $conn->prepare($query);
-
-    $stmt->execute(['id'=>$id]);
-
+    $stmt->execute();
+    echo $query;
     if($stmt->rowCount() > 0) {
 
         $users_arr = array();
@@ -29,7 +29,6 @@ if(isset($_GET['id'])){
 
         $users_arr["data"] = $user_record;
         $users_arr["success"] = true; 
-
         echo json_encode($users_arr);
 
     } else{
@@ -39,6 +38,7 @@ if(isset($_GET['id'])){
     }
 
     $stmt->closeCursor();
+
 }
 
-?>
+
