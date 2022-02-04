@@ -19,10 +19,21 @@ $createdDate = date('Y-m-d H:i:s');
     "raceCode" : 3432,
     "raceDateTime" : "2022-01-15 00:35:07",
     "createdBy" : "31",
-    "winningHorse" : [{"horseCode" : "DEC", "winningPlace" : 1, "amount":100 }, {"horseCode" : "FINE","winningPlace" : 2, "amountFront" : 20, "amountBack" : 10 }]
+    "wins": [
+        {"winningHorse" : [{
+            "horseCode" : "DEC", "winningPlace" : 1, "amountFront":100, "amountBack" : 30 
+            }, 
+            {
+            "horseCode" : "FINE","winningPlace" : 2, "amountFront" : 20, "amountBack" : 10 
+            }
+        ],
+        "amounts": [{"bettingHorseId":3,"amountTypeId":2,"amount": 100},
+        {"bettingHorseId":4",amountTypeId":1,"amount": 20}]
+        }
+    ]
 }
 */
-$winningHorse = $data->winningHorse;
+$wins = $data->wins;
 
 if(isset($raceId) && isset($raceCode) && isset($raceDateTime) && isset($createdBy) && isset($createdDate)){
 
@@ -31,12 +42,18 @@ if(isset($raceId) && isset($raceCode) && isset($raceDateTime) && isset($createdB
     $stmtRaceWinning ->execute(['raceId'=>$raceId, 'raceCode'=>$raceCode, 'raceDateTime'=>$raceDateTime, 'createdBy'=>$createdBy, 'createdDate'=>$createdDate ]);
     $insertedRaceWinningId = $conn->lastInsertId();
 
-    foreach($winningHorse as $winningHorses){
+    foreach($wins as $win){
+    foreach($win->winningHorse as $winningHorses){
         $queryRaceWinningHorse = "INSERT INTO racewinninghorse (raceWinningId, raceId, horseCode, winningPlace,amountFront,amountBack) VALUES (:raceWinningId,:raceId,:horseCode,:winningPlace,:amountFront,:amountBack) ";
         $stmtRaceWinningHorse = $conn->prepare($queryRaceWinningHorse);
         $stmtRaceWinningHorse->execute(['raceWinningId'=>$insertedRaceWinningId, 'raceId'=>$raceId, 'horseCode'=>$winningHorses->horseCode, 'winningPlace'=>$winningHorses->winningPlace, 'amountFront'=>$winningHorses->amountFront, 'amountBack'=>$winningHorses->amountBack]);
     }
-
+    foreach($win->amounts as $amount){
+        $queryRaceWinningHorseAmount = "INSERT INTO racewinninghorseamount(bettingHorseId,amountTypeId,amount) VALUES (:bettingHorseId,:amountTypeId,:amount)";
+        $stmtRaceWinningHorseAmount = $conn->prepare($queryRaceWinningHorseAmount);
+        $stmtRaceWinningHorseAmount->execute(['bettingHorseId'=>$amount->bettingHorseId,'amountTypeId'=>$amount->amountTypeId,'amount'=>$amount->amount]);
+    }
+    }
     echo json_encode(array("success" => true, "data" => array()));
 
 }else{ 

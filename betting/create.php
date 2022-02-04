@@ -15,16 +15,32 @@ $createdBy = $data->createdBy;
 
 $createdDate = date('Y-m-d H:i:s');
 
-
 /*
-bets : [{ bettingHorse: [{ raceCode:'w1', horseCode: 'wewe' ..], "amounts": [{"amountTypeId":2, 
-            "amount": 100},
-            {"amountTypeId":1, 
-            "amount": 20}]}, 
- { raceCode:'w1', horseCode: 'wewe' ..], "amounts": [{"amountTypeId":2, 
-            "amount": 100},
-            {"amountTypeId":1, 
-            "amount": 20}],]
+{
+    "customer": "1234",
+    "bettingDate": "2022-01-20",
+    "bettingCenterId": "02",
+    "bettingAmount": "3500",
+    "createdBy": "31",
+    "bets": [
+        {"bettingHorse": [{
+            "raceCode":"w1", "horseCode": "Fine"
+            }, 
+            {
+            "raceCode":"w3", "horseCode": "Fine 32"
+            },
+            {
+            "raceCode":"w2", "horseCode": "DEC"
+            }],
+        "amounts": [{"amountTypeId":2, 
+        "amount": 100},
+        {"amountTypeId":1, 
+        "amount": 20}]
+        }
+    ],
+    "amountTypeId": 1, 
+    "amount": 20
+}
  */
 
 $bets = $data->bets;
