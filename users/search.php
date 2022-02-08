@@ -34,7 +34,6 @@ if(isset($_GET['searchText'])){
     } else{
 
         $users_arr["success"] = false; 
-        echo json_encode($users_arr);
     }
 
     $stmt->closeCursor();
