@@ -1,14 +1,19 @@
 <?php
-include_once "../config/header.php";
+//headers
+header("Acess-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+
+//include database
 include_once "../config/constants.php";
 include_once "../config/database.php";
 
-if(isset($_GET['id'])){
 
-    $id = $_GET['id'];
+if(isset($_GET['searchText'])){
+
+    $searchText = $_GET['searchText'];
 
     //create query
-    $query = "SELECT id,name,address,contactPerson,phone,isActive FROM bettingcenter WHERE id= :id AND isActive = 1 ";
+    $query = "SELECT id,name,address,contactPerson,phone,isActive FROM bettingcenter WHERE ( name LIKE '%". $searchText. "%' ) AND isActive = 1 ";
 
     //prepare the query
     $stmt = $conn->prepare($query);
@@ -21,7 +26,7 @@ if(isset($_GET['id'])){
         $BettingCen_arr = array();
         $BettingCen_arr["data"] = array(); 
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
         
         $BettingCen_record = array(
@@ -34,13 +39,12 @@ if(isset($_GET['id'])){
 
         array_push($BettingCen_arr["data"], $BettingCen_record);
         $BettingCen_arr["Success"] = true; 
-
         echo json_encode($BettingCen_arr);
+    }
 
     } else{
 
         $BettingCen_arr["Success"] = false; 
-        echo json_encode($BettingCen_arr);
     }
 
     $stmt->closeCursor();
