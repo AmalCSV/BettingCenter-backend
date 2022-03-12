@@ -57,6 +57,7 @@ if($stmt->rowCount() > 0){
     $data = array(
             "message" => "Successful login.",
             "jwt" =>  '', //$jwt,
+            "id" => $id,
             "userName" => $username,
             "expireAt" => $expire_claim,
             "firstName" => $firstname,
