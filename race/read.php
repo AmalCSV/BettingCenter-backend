@@ -12,14 +12,16 @@ $extendedJson = '';
 $createdBy	 = '';
 $createdDate = '';
 $isDeleted = '';
+$isIndividual = false;
 
 if(isset($_GET['id'])) {
+    $isIndividual = true;
     $id = $_GET['id'];
-    $query = "SELECT id, name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted FROM race WHERE id= :id ORDER BY id DESC";
+    $query = "SELECT id, name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted FROM race WHERE id= :id  and isDeleted != 1 ORDER BY id DESC";
     $stmt = $conn->prepare($query);
     $stmt->execute(['id' => $id]); 
 } else {
-    $query = "SELECT id, name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted FROM race ORDER BY id DESC";
+    $query = "SELECT id, name, identifier, date, description,extendedJson, createdBy, createdDate, isDeleted FROM race  WHERE isDeleted != 1 ORDER BY id DESC";
     $stmt = $conn->prepare($query);
     $stmt->execute();
 }
@@ -50,9 +52,9 @@ if($num > 0){
          array_push($race_arr["data"], $race_record);
          $race_arr["Success"] = true; 
     }
-    if(count($race_arr["data"]) == 1){
+    if($isIndividual) {
         $race_arr["data"] = $race_arr["data"][0];
-    } 
+    }
     echo json_encode($race_arr);
     
     }else{
