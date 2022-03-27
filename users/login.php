@@ -22,7 +22,7 @@ if(!property_exists($data, 'password') || $data->password =='null' || $data->pas
 $userName = $data->userName;
 $password = md5($data->password);
 
-$loginQuery = "SELECT id, userName, firstName,lastName FROM user WHERE userName = :userName AND password = :password";
+$loginQuery = "SELECT id, userName, firstName,lastName, roleId, (SELECT name FROM role WHERE id=roleId) as role FROM user WHERE userName = :userName AND password = :password";
 
 $stmt = $conn->prepare($loginQuery);
 $stmt->execute(['userName' => $userName,'password' => $password]);
@@ -33,6 +33,8 @@ if($stmt->rowCount() > 0){
     $firstname = $row['firstName'];
     $lastname = $row['lastName'];
     $username = $row['userName'];
+    $roleId = $row['roleId'];
+    $role = $row['role'];
 
     $secret_key = "BETTING_CORE";
     $issuer_claim = "ADR_SERVER"; // this can be the servername
@@ -50,7 +52,7 @@ if($stmt->rowCount() > 0){
             "id" => $id,
             "firstname" => $firstname,
             "lastname" => $lastname,
-            "username" => $username
+            "username" => $username,
     ));
 
     //$jwt = JWT::encode($token, $secret_key);
@@ -62,6 +64,9 @@ if($stmt->rowCount() > 0){
             "expireAt" => $expire_claim,
             "firstName" => $firstname,
             "lastName" => $lastname,
+            "roleId" => $roleId,
+            "role" => $role,
+
     );
 
     echo json_encode(array('success'=> true, 'data'=>$data ));

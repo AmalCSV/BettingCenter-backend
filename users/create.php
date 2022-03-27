@@ -8,6 +8,7 @@ $firstName = '';
 $lastName = '';
 $userName = '';
 $password = '';
+$roleId = 1;
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -18,13 +19,14 @@ if(!property_exists($data, 'firstName') || $data->firstName =='null' || $data->f
     $field = ['message' => 'Invalid lastName', 'success'=> false];
 } else if(!property_exists($data, 'userName') || $data->userName =='null' || $data->userName == '') {
     $field = ['message' => 'Invalid userName', 'success'=> false];
-} else if(!property_exists($data, 'password') || $data->firstName =='password' || $data->password == '') {
+} else if(!property_exists($data, 'password') || $data->password =='null' || $data->password == '') {
     $field = ['message' => 'Invalid password', 'success'=> false];
+} else if(property_exists($data, 'roleId') && ($data->roleId =='null' || $data->password == '')) {
+    $field = ['message' => 'Invalid role', 'success'=> false];
 }
 
 if($field != null) {
-    $output = ['message' => 'Invalid field : '.$field, 'success'=> false];
-    echo json_encode($output);
+    echo json_encode($field );
     exit();
 }
     $firstName = $data->firstName;
@@ -32,7 +34,9 @@ if($field != null) {
     $userName = $data->userName;
     $password = $data->password;
     $hashedPassword = md5($password);
-
+    if($data->roleId) {
+        $roleId =$data->roleId;
+    }
     $queryExist = " SELECT * FROM user WHERE userName = :userName ";
     $stmtExist = $conn->prepare($queryExist);
     $stmtExist->execute(['userName' => $userName]);
@@ -43,13 +47,13 @@ if($field != null) {
         }
 
     elseif(isset($firstName) && isset($lastName) && isset($userName) && isset($password)){
-    $query = "INSERT INTO user (firstName, lastName, userName, password, isActive) VALUES (:firstName,:lastName,:userName,:password,1)";
+    $query = "INSERT INTO user (firstName, lastName, userName, password, isActive,roleId) VALUES (:firstName,:lastName,:userName,:password,1, :roleId)";
     $stmt = $conn->prepare($query);
-    $stmt->execute(['firstName' => $firstName,'lastName' => $lastName,'userName' => $userName,'password' => $hashedPassword]);
+    $stmt->execute(['firstName' => $firstName,'lastName' => $lastName,'userName' => $userName,'password' => $hashedPassword, 'roleId' => $roleId]);
 
     $insertedId = $conn->lastInsertId();
     
-    $querySelect = "SELECT id,firstName,lastName,userName FROM user WHERE  id = :id ";
+    $querySelect = "SELECT id,firstName,lastName,userName,roleId FROM user WHERE  id = :id ";
     $stmtSelect = $conn->prepare($querySelect);
     $stmtSelect->execute(['id' => $insertedId]);
 

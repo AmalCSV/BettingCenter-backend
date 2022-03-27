@@ -12,9 +12,8 @@ $extendedJson = '';
 
 $data = json_decode(file_get_contents("php://input"));
 
-$id = $data->id;
-if ($data->id) {
-    $id = $data->id;
+if (property_exists($data, 'id')) {
+    $id = null;
  }
 
 $companyName = $data->companyName;
