@@ -10,7 +10,7 @@ $CreatedBy = '';
 $createdDate = '';
 
 //create query
-$query = "SELECT id, bettingDate,closingTime,CreatedBy,createdDate FROM bettingclosing ORDER BY id DESC";
+$query = "SELECT id, bettingDate,closingTime,CreatedBy,createdDate FROM bettingClosing ORDER BY id DESC";
 
 //prepare the query statement
 $stmt = $conn->prepare($query);

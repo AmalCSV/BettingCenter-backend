@@ -210,7 +210,7 @@ CREATE TABLE `race` (
   `description` text DEFAULT NULL,
   `extendedJson` text DEFAULT NULL,
   `createdBy` int(11) NOT NULL,
-  `createdDate` date NOT NULL DEFAULT current_timestamp(),
+  `createdDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `isDeleted` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

@@ -16,7 +16,7 @@ include_once "../config/constants.php";
 include_once "../config/database.php";
 
 //create query
-$query = "SELECT id, name, address,contactPerson, phone, isActive  FROM bettingcenter ORDER BY id DESC";
+$query = "SELECT id, name, address,contactPerson, phone, isActive  FROM bettingCenter ORDER BY id DESC";
 
 //prepare the query statement
 $stmt = $conn->prepare($query);

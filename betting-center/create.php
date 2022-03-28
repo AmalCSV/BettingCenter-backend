@@ -40,7 +40,7 @@ else if(!property_exists($data, 'phone')|| $data->phone =='null' || $data->phone
     $phone = $data->phone;
 
     if(isset($name) && isset($address) && isset($contactPerson) && isset($phone)){
-    $query = "INSERT INTO bettingcenter (name, address,contactPerson,phone,isActive) VALUES (:name,:address,:contactPerson,:phone,1)";
+    $query = "INSERT INTO bettingCenter (name, address,contactPerson,phone,isActive) VALUES (:name,:address,:contactPerson,:phone,1)";
     $stmt = $conn->prepare($query);
     $stmt->execute(['name' => $name,'address' => $address,'contactPerson' => $contactPerson,'phone' => $phone]);
 

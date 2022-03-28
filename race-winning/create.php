@@ -26,13 +26,13 @@ $winningHorse = $data->winningHorse;
 
 if(isset($raceId) && isset($raceCode) && isset($raceDateTime) && isset($createdBy) && isset($createdDate)){
 
-    $queryRaceWinning = "INSERT INTO racewinning (raceId,raceCode,raceDateTime,createdBy,createdDate) VALUES (:raceId , :raceCode, :raceDateTime, :createdBy, :createdDate) " ;
+    $queryRaceWinning = "INSERT INTO raceWinning (raceId,raceCode,raceDateTime,createdBy,createdDate) VALUES (:raceId , :raceCode, :raceDateTime, :createdBy, :createdDate) " ;
     $stmtRaceWinning = $conn->prepare($queryRaceWinning);
     $stmtRaceWinning ->execute(['raceId'=>$raceId, 'raceCode'=>$raceCode, 'raceDateTime'=>$raceDateTime, 'createdBy'=>$createdBy, 'createdDate'=>$createdDate ]);
     $insertedRaceWinningId = $conn->lastInsertId();
 
     foreach($winningHorse as $winningHorses){
-        $queryRaceWinningHorse = "INSERT INTO racewinninghorse (raceWinningId, raceId, horseCode, winningPlace,amountFront,amountBack) VALUES (:raceWinningId,:raceId,:horseCode,:winningPlace,:amountFront,:amountBack) ";
+        $queryRaceWinningHorse = "INSERT INTO raceWinningHorse (raceWinningId, raceId, horseCode, winningPlace,amountFront,amountBack) VALUES (:raceWinningId,:raceId,:horseCode,:winningPlace,:amountFront,:amountBack) ";
         $stmtRaceWinningHorse = $conn->prepare($queryRaceWinningHorse);
         $stmtRaceWinningHorse->execute(['raceWinningId'=>$insertedRaceWinningId, 'raceId'=>$raceId, 'horseCode'=>$winningHorses->horseCode, 'winningPlace'=>$winningHorses->winningPlace, 'amountFront'=>$winningHorses->amountFront, 'amountBack'=>$winningHorses->amountBack]);
     }

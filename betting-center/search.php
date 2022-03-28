@@ -8,7 +8,7 @@ if(isset($_GET['id'])){
     $id = $_GET['id'];
 
     //create query
-    $query = "SELECT id,name,address,contactPerson,phone,isActive FROM bettingcenter WHERE id= :id AND isActive = 1 ";
+    $query = "SELECT id,name,address,contactPerson,phone,isActive FROM bettingCenter WHERE id= :id AND isActive = 1 ";
 
     //prepare the query
     $stmt = $conn->prepare($query);

@@ -14,7 +14,7 @@ try{
     
     if(isset($id) && isset($name) && isset($address) && isset($contactPerson) && isset($phone)){
 
-    $updateQuery = "UPDATE bettingcenter SET name = :name, address = :address,contactPerson = :contactPerson, phone = :phone WHERE id = :id";
+    $updateQuery = "UPDATE bettingCenter SET name = :name, address = :address,contactPerson = :contactPerson, phone = :phone WHERE id = :id";
 
     $stmt = $conn->prepare($updateQuery);
 
