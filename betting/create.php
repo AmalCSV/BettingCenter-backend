@@ -44,13 +44,13 @@ if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($
         $insertedBettingCollectionId = $conn->lastInsertId();
 
         foreach ($bet->amounts as $amount) {
-            $queryBettingAmount = "INSERT INTO bettingamount (HorseCollectionId, bettingAmountType, amount) VALUES (:horseCollectionId,:bettingAmountType,:amount)";
+            $queryBettingAmount = "INSERT INTO bettingAmount (HorseCollectionId, bettingAmountType, amount) VALUES (:horseCollectionId,:bettingAmountType,:amount)";
             $stmtBettingAmount = $conn->prepare($queryBettingAmount);
             $stmtBettingAmount -> execute(['horseCollectionId' => $insertedBettingCollectionId,'bettingAmountType' => $amount->amountTypeId,'amount' => $amount->amount]);
         }
 
         foreach ($bet->bettingHorse as $bettingHorse){
-            $queryBettingHorse = "INSERT INTO bettinghorse (horseCollectionId, raceCode, horseCode,bettingId) VALUES (:horseCollectionId,:raceCode,:horseCode,:bettingId)";
+            $queryBettingHorse = "INSERT INTO bettingHorse (horseCollectionId, raceCode, horseCode,bettingId) VALUES (:horseCollectionId,:raceCode,:horseCode,:bettingId)";
             $stmtBettingHorse = $conn->prepare($queryBettingHorse);
             $stmtBettingHorse ->execute(['horseCollectionId' => $insertedBettingCollectionId,'raceCode' => $bettingHorse->raceCode,'horseCode' => $bettingHorse->horseCode, 'bettingId' => $insertedBettingId ]);
         }
