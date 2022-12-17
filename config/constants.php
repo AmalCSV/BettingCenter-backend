@@ -5,7 +5,7 @@
 	
 	// Database parameters
 	// Data source name
-	define('DSN', 'mysql:host=localhost;port=3306;dbname=betting_db');
+	define('DSN', 'mysql:host=localhost;port=3306;dbname=bettingcenter');
 	
 	// Hostname
 	define('DB_HOST', 'localhost');
@@ -17,5 +17,5 @@
 	define('DB_PASSWORD', '');
 	
 	// DB name
-	define('DB_NAME', 'betting_db');
+	define('DB_NAME', 'bettingcenter');
 ?>
