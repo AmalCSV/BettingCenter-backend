@@ -2,6 +2,7 @@
 include_once "../config/header.php";
 include_once "../config/constants.php";
 include_once "../config/database.php";
+include_once "../betting/bettingCalculation.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -31,8 +32,9 @@ $bets = $data->bets;
 
 
 if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($bettingAmount) && isset($createdDate) && isset($createdBy) && isset($bets)){
-    $calculatedBettingAmount = 0;//battingCalcuation($bets);
-    $queryBetting = "INSERT INTO betting (customer, bettingDate, bettingCenterId, bettingAmount,createdDate,createdBy,winningAmount, calculateBettingAmount) VALUES (:customer,:bettingDate,:bettingCenterId,:bettingAmount,:createdDate,:createdBy,0,:calculateBettingAmount)";
+    //$calculatedBettingAmount = $finalAmount; //battingCalcuation($bets);
+    echo bettingCalculation($bets);
+    /*$queryBetting = "INSERT INTO betting (customer, bettingDate, bettingCenterId, bettingAmount,createdDate,createdBy,winningAmount, calculateBettingAmount) VALUES (:customer,:bettingDate,:bettingCenterId,:bettingAmount,:createdDate,:createdBy,0,:calculateBettingAmount)";
     $stmtBetting = $conn->prepare($queryBetting);
     $stmtBetting ->execute(['customer' => $customer,'bettingDate' => $bettingDate,'bettingCenterId' => $bettingCenterId,'bettingAmount' => $bettingAmount,'createdDate' => $createdDate,'createdBy' => $createdBy, 'calculateBettingAmount' => $calculatedBettingAmount ]);
     $insertedBettingId = $conn->lastInsertId();
@@ -56,7 +58,7 @@ if(isset($customer) && isset($bettingDate) && isset($bettingCenterId) && isset($
         }
     }
       
-    echo json_encode(array("success" => true, "data" => array()));
+    echo json_encode(array("success" => true, "data" => array())); */
 }else{ 
     echo json_encode(array("success" => false, "message" => "Data Not Passed"));
 } 

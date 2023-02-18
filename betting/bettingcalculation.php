@@ -1,5 +1,6 @@
 
 <?php
+
 /*
 {
     "customer": "1234",
@@ -27,17 +28,18 @@
     "amount": 20
 }
 */
-function bettingCalculation($bet){
 
-$bettintgAmount = prepareBettingAmount($bet);
-$finalAmount = getBettingAmount();
+function bettingCalculation($bets){
+
+$bettintgAmount = prepareBettingAmount($bets);
+$finalAmount = getBettingAmount(20, 10, 5, 4,3,4);
 
 return $finalAmount;
 
 }
 
 
-function prepareBettingAmount($bet){
+function prepareBettingAmount($bets){
 
   $noOfHorses = 0;
   $frontMoney = 0;
@@ -45,9 +47,9 @@ function prepareBettingAmount($bet){
   $bettingCharge = 0;
 
 
-  foreach ($bet as $bet) {
+  foreach ($bets as $bets) {
 
-    $bettingAmount = $bet->amount;
+    $bettingAmount = $bets->amount;
      foreach($bettingAmount as $bettingAmount){
       if ($bettingAmount->amountTypeId == 1){
         $frontMoney = $frontMoney + $bettingAmount->amount;
@@ -62,9 +64,9 @@ function prepareBettingAmount($bet){
         $tribbleWin = $tribbleWin + $bettingAmount->amount;
       }
 
-      $noOfHorses = $bet->bettingHorse -> count;
+      $noOfHorses = $bets->bettingHorse -> count;
 
-      $bettingCharge = $bet->bettingAmount;
+      $bettingCharge = $bets->bettingAmount;
 
      }
 
